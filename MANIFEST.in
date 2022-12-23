@@ -1,0 +1,4 @@
+include *.md
+include pytest.ini
+recursive-include tests *.py
+recursive-include tests *.xml
