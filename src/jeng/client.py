@@ -8,7 +8,11 @@ from zeep.transports import Transport
 # disabling urllib warnings
 urllib3.disable_warnings()
 
-CLIENT_NONE_EXCEPTION = "Please connect first."
+
+# exception
+class JengClientNoneException(AttributeError):
+    def __init__(self):
+        super().__init__("Client is None. Probably client not yet connected / disconnected.")
 
 
 # witsml client
@@ -20,14 +24,14 @@ class WitsmlClient:
         self.__session = Session()
 
     def __test(self):
-        if self.__client is not None:
+        try:
             return (
                 self.__client.service.WMLS_GetBaseMsg(
                     ReturnValueIn=1,
                 )
             ).strip() == "Function completed successfully"
-        else:
-            return None
+        except Exception:
+            return False
 
     def connect(
         self,
@@ -58,8 +62,7 @@ class WitsmlClient:
         except requests.exceptions.SSLError:
             self.__session.verify = False
             self.__client = Client(url, transport=Transport(session=self.__session))
-        except Exception as e:
-            print(f"! {str(e)}")
+        except Exception:
             return False
         return self.__test()
 
@@ -105,7 +108,7 @@ class WitsmlClient:
                 CapabilitiesIn=xsd.SkipValue,
             )
         except AttributeError:
-            raise Exception(CLIENT_NONE_EXCEPTION)
+            raise JengClientNoneException
 
     def add_to_store(
         self,
@@ -135,7 +138,7 @@ class WitsmlClient:
                 CapabilitiesIn=xsd.SkipValue,
             )
         except AttributeError:
-            raise Exception(CLIENT_NONE_EXCEPTION)
+            raise JengClientNoneException
 
     def update_in_store(
         self,
@@ -165,7 +168,7 @@ class WitsmlClient:
                 CapabilitiesIn=xsd.SkipValue,
             )
         except AttributeError:
-            raise Exception(CLIENT_NONE_EXCEPTION)
+            raise JengClientNoneException
 
     def delete_from_store(
         self,
@@ -195,4 +198,4 @@ class WitsmlClient:
                 CapabilitiesIn=xsd.SkipValue,
             )
         except AttributeError:
-            raise Exception(CLIENT_NONE_EXCEPTION)
+            raise JengClientNoneException

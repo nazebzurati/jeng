@@ -5,10 +5,11 @@ with open("readme.md", "r") as doc:
 
 setup(
     name="jeng",
-    version="0.0.1",
+    version="0.0.2",
     license="MIT",
     description="A basic WITSML client with utilities.",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     author="Nazeb Zurati",
     author_email="nazeb04@gmail.com",
     url="https://github.com/nazebzurati/jeng",
@@ -39,6 +40,7 @@ setup(
             "black>=22.12.0",
             "check-manifest>=0.49",
             "twine>=4.0.2",
+            "coverage>=7.0.0",
         ],
     },
 )
