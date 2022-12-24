@@ -31,6 +31,8 @@ setup(
     ],
     install_requires=[
         "zeep>=4.2.1",
+        "xmltodict>=0.13.0",
+        "pandas>=1.5.2",
     ],
     extras_require={
         "dev": [

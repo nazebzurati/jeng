@@ -1,0 +1,4 @@
+<logs version="1.4.1.1" xmlns="http://www.witsml.org/schemas/1series">
+    <log uidWell="WELL_001" uidWellbore="WELLBORE_001" uid="LOG_001">
+    </log>
+</logs>

@@ -5,15 +5,10 @@ from requests.auth import HTTPBasicAuth
 from zeep import Client, proxy, xsd
 from zeep.transports import Transport
 
+from jeng import exception
+
 # disabling urllib warnings
 urllib3.disable_warnings()
-
-
-# exception
-class JengClientNoneException(AttributeError):
-    def __init__(self):
-        super().__init__("Client is None. Probably client not yet connected / disconnected.")
-
 
 # witsml client
 class WitsmlClient:
@@ -24,14 +19,12 @@ class WitsmlClient:
         self.__session = Session()
 
     def __test(self):
-        try:
-            return (
-                self.__client.service.WMLS_GetBaseMsg(
-                    ReturnValueIn=1,
-                )
-            ).strip() == "Function completed successfully"
-        except Exception:
-            return False
+        # exception will be caught by function caller
+        return (
+            self.__client.service.WMLS_GetBaseMsg(
+                ReturnValueIn=1,
+            )
+        ).strip() == "Function completed successfully"
 
     def connect(
         self,
@@ -59,12 +52,13 @@ class WitsmlClient:
         self.__session.auth = HTTPBasicAuth(username, password)
         try:
             self.__client = Client(url, transport=Transport(session=self.__session))
+            return self.__test()
         except requests.exceptions.SSLError:
             self.__session.verify = False
             self.__client = Client(url, transport=Transport(session=self.__session))
+            return self.__test()
         except Exception:
             return False
-        return self.__test()
 
     def service(self) -> proxy.ServiceProxy:
         """
@@ -108,7 +102,7 @@ class WitsmlClient:
                 CapabilitiesIn=xsd.SkipValue,
             )
         except AttributeError:
-            raise JengClientNoneException
+            raise exception.JengClientNoneException
 
     def add_to_store(
         self,
@@ -138,7 +132,7 @@ class WitsmlClient:
                 CapabilitiesIn=xsd.SkipValue,
             )
         except AttributeError:
-            raise JengClientNoneException
+            raise exception.JengClientNoneException
 
     def update_in_store(
         self,
@@ -168,7 +162,7 @@ class WitsmlClient:
                 CapabilitiesIn=xsd.SkipValue,
             )
         except AttributeError:
-            raise JengClientNoneException
+            raise exception.JengClientNoneException
 
     def delete_from_store(
         self,
@@ -198,4 +192,4 @@ class WitsmlClient:
                 CapabilitiesIn=xsd.SkipValue,
             )
         except AttributeError:
-            raise JengClientNoneException
+            raise exception.JengClientNoneException

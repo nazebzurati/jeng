@@ -1,0 +1,3 @@
+<wellbores xmlns="http://www.witsml.org/schemas/1series" version="1.4.1.1">
+    <wellbore uidWell="WELL_001" uid="WELLBORE_001"></wellbore>
+</wellbores>

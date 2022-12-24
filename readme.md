@@ -43,7 +43,7 @@ pip install jeng
             wml_type_in="well",
             xml_in=query.read(),
         )
-        
+
     # send query to WMLS_GetFromStore API
     with open(f"{QUERY_PATH}/query.xml", "r") as query:
         reply = client.get_from_store(
@@ -51,13 +51,20 @@ pip install jeng
             xml_in=query.read(),
             return_element="all",
         )
-    
+
     # send query to WMLS_DeleteFromStore API
     with open(f"{QUERY_PATH}/query.xml", "r") as query:
         reply = client.delete_from_store(
             wml_type_in="well",
             xml_in=query.read(),
         )
+
+    # string is expected for xml_in and you can
+    # pass string query to all the wrapper API
+    client.add_to_store(
+        wml_type_in="well",
+        xml_in=query_xml_str,
+    )
     ```
 
 3. To call other WITSML APIs than provided wrapper APIs (make sure to connect to WTISML Server first):
@@ -87,7 +94,7 @@ Contribution is welcome.
 
 3. Change the source code and test:
     ```bash
-    # Update environment variable using pytest.ini 
+    # Update environment variable using pytest.ini
     coverage run -m pytest && coverage xml
     sonar-scanner.bat -D"sonar.projectKey=<project-key>" -D"sonar.sources=." -D"sonar.host.url=<host-url>" -D"sonar.login=<project-token>"
     ```

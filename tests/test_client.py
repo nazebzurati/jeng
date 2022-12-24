@@ -22,8 +22,8 @@ def __parse_and_remove_ns(xml: str):
         # strip namespaces of attributes too
         for at in list(el.attrib.keys()):
             if "}" in at:
-                newat = at.split("}", 1)[1]
-                el.attrib[newat] = el.attrib[at]
+                new_at = at.split("}", 1)[1]
+                el.attrib[new_at] = el.attrib[at]
                 del el.attrib[at]
     return it.root
 
