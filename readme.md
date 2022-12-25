@@ -139,9 +139,9 @@ Make sure to have a WITSML server running for the test.
     black --line-length 120 .
 
     # run coverage and pytest
-    coverage run -m tox
-    coverage run -m tox -- -m integration  # test with WITSML server integration
-    coverage run -m tox -- -m unit         # test without WITSML server integration
+    coverage run -m pytest -v
+    coverage run -m pytest -m integration -v    # test with WITSML server integration
+    coverage run -m pytest -m unit -v           # test without WITSML server integration
 
     # run static code test
     coverage xml && sonar-scanner.bat -D"sonar.projectKey=<project-key>" -D"sonar.sources=." -D"sonar.host.url=<host-url>" -D"sonar.login=<project-token>"

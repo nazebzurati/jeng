@@ -44,7 +44,6 @@ setup(
             "check-manifest>=0.49",
             "twine>=4.0.2",
             "coverage>=7.0.0",
-            "tox>=4.0.16",
         ],
     },
 )
