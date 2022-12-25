@@ -12,6 +12,8 @@ pip install jeng
 
 ## Getting started
 
+Jeng should be compatible with Python 3.8 and higher.
+
 ### Client
 
 1. To create and connect to WITSML Server:
@@ -132,9 +134,15 @@ Make sure to have a WITSML server running for the test.
 
 3. Change the source code and test.
     ```bash
-    # Update environment variable using pytest.ini
+    # run code formatter
     isort . --skip env
     black --line-length 120 .
-    coverage run -m pytest && coverage xml
-    sonar-scanner.bat -D"sonar.projectKey=<project-key>" -D"sonar.sources=." -D"sonar.host.url=<host-url>" -D"sonar.login=<project-token>"
+
+    # run coverage and pytest
+    coverage run -m tox
+    coverage run -m tox -- -m integration  # test with WITSML server integration
+    coverage run -m tox -- -m unit         # test without WITSML server integration
+
+    # run static code test
+    coverage xml && sonar-scanner.bat -D"sonar.projectKey=<project-key>" -D"sonar.sources=." -D"sonar.host.url=<host-url>" -D"sonar.login=<project-token>"
     ```

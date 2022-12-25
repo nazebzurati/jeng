@@ -1,16 +1,11 @@
 import io
-import os
 from xml.etree import ElementTree
 
+import common
 import pytest
 
 from jeng.client import WitsmlClient
 
-# Loads test variables
-QUERY_PATH = "tests/query"
-CONNECTION_URL = os.environ.get("JENG_CONN_URL")
-CONNECTION_USERNAME = os.environ.get("JENG_CONN_USERNAME")
-CONNECTION_PASSWORD = os.environ.get("JENG_CONN_PASSWORD")
 
 # Link: https://stackoverflow.com/a/33997423
 def __parse_and_remove_ns(xml: str):
@@ -31,53 +26,57 @@ def __parse_and_remove_ns(xml: str):
 def __connect() -> WitsmlClient:
     client = WitsmlClient()
     assert client.connect(
-        url=CONNECTION_URL,
-        username=CONNECTION_USERNAME,
-        password=CONNECTION_PASSWORD,
+        url=common.CONNECTION_URL,
+        username=common.CONNECTION_USERNAME,
+        password=common.CONNECTION_PASSWORD,
     )
     return client
 
 
+@pytest.mark.integration
 def test_incorrect_credentials():
     client = WitsmlClient()
     assert (
         client.connect(
-            url=CONNECTION_URL,
-            username=f"{CONNECTION_USERNAME}$",
-            password=f"{CONNECTION_PASSWORD}$",
+            url=common.CONNECTION_URL,
+            username=f"{common.CONNECTION_USERNAME}$",
+            password=f"{common.CONNECTION_PASSWORD}$",
         )
         == False
     )
 
 
+@pytest.mark.integration
 def test_incorrect_credentials_username():
     client = WitsmlClient()
     assert (
         client.connect(
-            url=CONNECTION_URL,
-            username=f"{CONNECTION_USERNAME}$",
-            password=CONNECTION_PASSWORD,
+            url=common.CONNECTION_URL,
+            username=f"{common.CONNECTION_USERNAME}$",
+            password=common.CONNECTION_PASSWORD,
         )
         == False
     )
 
 
+@pytest.mark.integration
 def test_incorrect_credentials_password():
     client = WitsmlClient()
     assert (
         client.connect(
-            url=CONNECTION_URL,
-            username=CONNECTION_USERNAME,
-            password=f"{CONNECTION_PASSWORD}$",
+            url=common.CONNECTION_URL,
+            username=common.CONNECTION_USERNAME,
+            password=f"{common.CONNECTION_PASSWORD}$",
         )
         == False
     )
 
 
+@pytest.mark.integration
 @pytest.mark.dependency()
 def test_add_to_store():
     client = __connect()
-    with open(f"{QUERY_PATH}/well_create.xml", "r") as query:
+    with open(f"{common.QUERY_PATH}/well_create.xml", "r") as query:
         reply = client.add_to_store(
             wml_type_in="well",
             xml_in=query.read(),
@@ -85,10 +84,11 @@ def test_add_to_store():
         assert reply is not None and reply.SuppMsgOut == "WELL_001"
 
 
+@pytest.mark.integration
 @pytest.mark.dependency(depends=["test_add_to_store"])
 def test_update_in_store():
     client = __connect()
-    with open(f"{QUERY_PATH}/well_update.xml", "r") as query:
+    with open(f"{common.QUERY_PATH}/well_update.xml", "r") as query:
         reply = client.update_in_store(
             wml_type_in="well",
             xml_in=query.read(),
@@ -96,10 +96,11 @@ def test_update_in_store():
         assert reply is not None and reply.Result == 1
 
 
+@pytest.mark.integration
 @pytest.mark.dependency(depends=["test_update_in_store"])
 def test_get_from_store():
     client = __connect()
-    with open(f"{QUERY_PATH}/well_read.xml", "r") as query:
+    with open(f"{common.QUERY_PATH}/well_read.xml", "r") as query:
         reply = client.get_from_store(
             wml_type_in="well",
             xml_in=query.read(),
@@ -112,10 +113,11 @@ def test_get_from_store():
         assert reply.Result == 1 and well_name == "WELL 002"
 
 
+@pytest.mark.integration
 @pytest.mark.dependency(depends=["test_get_from_store"])
 def test_delete_from_store():
     client = __connect()
-    with open(f"{QUERY_PATH}/well_delete.xml", "r") as query:
+    with open(f"{common.QUERY_PATH}/well_delete.xml", "r") as query:
         reply = client.delete_from_store(
             wml_type_in="well",
             xml_in=query.read(),
@@ -123,29 +125,31 @@ def test_delete_from_store():
         assert reply is not None and reply.Result == 1
 
 
+@pytest.mark.integration
 def test_direct_call():
     client = __connect()
     reply = client.service().WMLS_GetVersion()
     assert reply == "1.3.1.1,1.4.1.1"
 
 
+@pytest.mark.integration
 def test_api_call_before_connect():
     client = WitsmlClient()
-    with open(f"{QUERY_PATH}/well_create.xml", "r") as query:
+    with open(f"{common.QUERY_PATH}/well_create.xml", "r") as query:
         with pytest.raises(Exception):
             client.add_to_store(
                 wml_type_in="well",
                 xml_in=query.read(),
             )
 
-    with open(f"{QUERY_PATH}/well_update.xml", "r") as query:
+    with open(f"{common.QUERY_PATH}/well_update.xml", "r") as query:
         with pytest.raises(Exception):
             client.update_in_store(
                 wml_type_in="well",
                 xml_in=query.read(),
             )
 
-    with open(f"{QUERY_PATH}/well_read.xml", "r") as query:
+    with open(f"{common.QUERY_PATH}/well_read.xml", "r") as query:
         with pytest.raises(Exception):
             client.get_from_store(
                 wml_type_in="well",
@@ -153,7 +157,7 @@ def test_api_call_before_connect():
                 return_element="all",
             )
 
-    with open(f"{QUERY_PATH}/well_delete.xml", "r") as query:
+    with open(f"{common.QUERY_PATH}/well_delete.xml", "r") as query:
         with pytest.raises(Exception):
             client.delete_from_store(
                 wml_type_in="well",
