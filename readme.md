@@ -133,6 +133,8 @@ Make sure to have a WITSML server running for the test.
 3. Change the source code and test.
     ```bash
     # Update environment variable using pytest.ini
+    isort . --skip env
+    black --line-length 120 .
     coverage run -m pytest && coverage xml
     sonar-scanner.bat -D"sonar.projectKey=<project-key>" -D"sonar.sources=." -D"sonar.host.url=<host-url>" -D"sonar.login=<project-token>"
     ```

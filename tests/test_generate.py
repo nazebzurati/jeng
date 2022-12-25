@@ -1,9 +1,10 @@
-import os
 import copy
+import os
+
 import pandas
 import pytest
 
-from jeng import generate, model, exception
+from jeng import exception, generate, model
 from jeng.client import WitsmlClient
 
 QUERY_PATH = "tests/query"
