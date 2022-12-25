@@ -5,67 +5,6 @@ import pandas
 import pytest
 
 from jeng import exception, generate
-from jeng.client import WitsmlClient
-
-
-def __connect() -> WitsmlClient:
-    client = WitsmlClient()
-    assert client.connect(
-        url=common.CONNECTION_URL,
-        username=common.CONNECTION_USERNAME,
-        password=common.CONNECTION_PASSWORD,
-    )
-    return client
-
-
-def __connect_and_prepare() -> WitsmlClient:
-
-    client = __connect()
-
-    # create well
-    with open(f"{common.QUERY_PATH}/well_create.xml", "r") as query:
-        reply = client.add_to_store(
-            wml_type_in="well",
-            xml_in=query.read(),
-        )
-        assert reply is not None and reply.SuppMsgOut == "WELL_001"
-
-    # create wellbore
-    with open(f"{common.QUERY_PATH}/wellbore_create.xml", "r") as query:
-        reply = client.add_to_store(
-            wml_type_in="wellbore",
-            xml_in=query.read(),
-        )
-        assert reply is not None and reply.SuppMsgOut == "WELLBORE_001"
-
-    return client
-
-
-def __delete_and_clean_witsml(client: WitsmlClient):
-
-    # delete log
-    with open(f"{common.QUERY_PATH}/log_delete.xml", "r") as query:
-        reply = client.delete_from_store(
-            wml_type_in="log",
-            xml_in=query.read(),
-        )
-        assert reply is not None and reply.Result == 1
-
-    # delete wellbore
-    with open(f"{common.QUERY_PATH}/wellbore_delete.xml", "r") as query:
-        reply = client.delete_from_store(
-            wml_type_in="wellbore",
-            xml_in=query.read(),
-        )
-        assert reply is not None and reply.Result == 1
-
-    # delete well
-    with open(f"{common.QUERY_PATH}/well_delete.xml", "r") as query:
-        reply = client.delete_from_store(
-            wml_type_in="well",
-            xml_in=query.read(),
-        )
-        assert reply is not None and reply.Result == 1
 
 
 @pytest.mark.unit
@@ -166,7 +105,7 @@ def test_generate_log_full_no_index():
     )
 
     # test with WITSML Server
-    client = __connect_and_prepare()
+    client = common.__connect_and_prepare()
     reply = client.add_to_store(
         wml_type_in="log",
         xml_in=log_query,
@@ -174,7 +113,7 @@ def test_generate_log_full_no_index():
     assert reply is not None and reply.Result == 1
 
     # clean up WITMSL data on server
-    __delete_and_clean_witsml(client)
+    common.__delete_and_clean_witsml(client)
 
 
 @pytest.mark.integration
@@ -197,7 +136,7 @@ def test_generate_log_full():
     )
 
     # test with WITSML Server
-    client = __connect_and_prepare()
+    client = common.__connect_and_prepare()
     reply = client.add_to_store(
         wml_type_in="log",
         xml_in=log_query,
@@ -205,7 +144,7 @@ def test_generate_log_full():
     assert reply is not None and reply.Result == 1
 
     # clean up WITMSL data on server
-    __delete_and_clean_witsml(client)
+    common.__delete_and_clean_witsml(client)
 
 
 @pytest.mark.integration
@@ -219,7 +158,7 @@ def test_generate_log_header_only():
     )
 
     # test with WITSML Server
-    client = __connect_and_prepare()
+    client = common.__connect_and_prepare()
     reply = client.add_to_store(
         wml_type_in="log",
         xml_in=log_query,
@@ -248,7 +187,7 @@ def test_generate_log_data_only():
     )
 
     # test with WITSML Server
-    client = __connect()
+    client = common.__connect()
     reply = client.update_in_store(
         wml_type_in="log",
         xml_in=log_query,
@@ -256,4 +195,4 @@ def test_generate_log_data_only():
     assert reply is not None and reply.Result == 1
 
     # clean up WITMSL data on server
-    __delete_and_clean_witsml(client)
+    common.__delete_and_clean_witsml(client)
