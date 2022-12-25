@@ -54,5 +54,6 @@ docs/_build
 *.bak
 
 .scannerwork
+note.md
 settings.json
 coverage.xml

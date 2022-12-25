@@ -5,7 +5,7 @@ with open("readme.md", "r") as doc:
 
 setup(
     name="jeng",
-    version="0.0.2",
+    version="0.0.3",
     license="MIT",
     description="A basic WITSML client with utilities.",
     long_description=long_description,

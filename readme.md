@@ -73,9 +73,47 @@ pip install jeng
     reply = client.service().WMLS_GetVersion()
     ```
 
-## Contribute
+### Log Query Generator
 
-Contribution is welcome.
+```python
+from jeng import model, generate
+
+# set log basic info
+log_basic_info = model.LogBasicInfoModel(
+    well_uid="WELL_001",
+    well_name="WELL 001",
+    wellbore_uid="WELLBORE_001",
+    wellbore_name="WELLBORE 001",
+    log_uid="LOG_001",
+    log_name="LOG 001",
+)
+
+# set log curve info
+log_curve_info_list = [
+    model.LogCurveInfoModel(
+        uid="TIME",
+        mnemonic="TIME",
+        unit="s",
+        curve_description="Time",
+        type_log_data="date time",
+        is_index_curve=True,
+    ),
+    ...
+]
+
+...
+
+# generate query (make sure to use mnemonic as column name)
+query_xml = generate.generate_log_query(
+    log_basic_info=log_basic_info,
+    log_curve_info_list=log_curve_info_list,
+    dataframe=dataframe,
+)
+```
+
+## Test
+
+Make sure to have a WITSML server running for the test.
 
 1. Clone the project:
     ```bash
@@ -92,7 +130,7 @@ Contribution is welcome.
     pip install -e .[dev]
     ```
 
-3. Change the source code and test:
+3. Change the source code and test.
     ```bash
     # Update environment variable using pytest.ini
     coverage run -m pytest && coverage xml
