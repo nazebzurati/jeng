@@ -1,0 +1,14 @@
+<logs xmlns:gml="http://www.opengis.net/gml/3.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:dc="http://purl.org/dc/terms/" version="1.4.1.1"
+    xmlns="http://www.witsml.org/schemas/1series">
+    <log uidWell="WELL_001" uidWellbore="WELLBORE_001" uid="LOG_001">
+        <nameWell>WELL 001</nameWell>
+        <nameWellbore>WELLBORE 001</nameWellbore>
+        <name>LOG 001</name>
+        <logData>
+            <mnemonicList>TIME,DEPTH,HKLA</mnemonicList>
+            <unitList>s,m,klbf</unitList>
+        </logData>
+    </log>
+</logs>

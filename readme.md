@@ -113,6 +113,19 @@ query_xml = generate.generate_log_query(
 )
 ```
 
+### Log Reply Parser
+
+```python
+from jeng import parse
+
+...
+
+# parse WITSML XMLout reply data into dataframe
+dataframe = parse.parse_log_into_dataframe(
+    xml_out=reply["XMLout"],
+)
+```
+
 ## Test
 
 Make sure to have a WITSML server running for the test.

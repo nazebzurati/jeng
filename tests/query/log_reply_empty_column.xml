@@ -1,0 +1,24 @@
+<logs xmlns:gml="http://www.opengis.net/gml/3.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:dc="http://purl.org/dc/terms/" version="1.4.1.1"
+    xmlns="http://www.witsml.org/schemas/1series">
+    <log uidWell="WELL_001" uidWellbore="WELLBORE_001" uid="LOG_001">
+        <nameWell>WELL 001</nameWell>
+        <nameWellbore>WELLBORE 001</nameWellbore>
+        <name>LOG 001</name>
+        <logData>
+            <mnemonicList>TIME,DEPTH,</mnemonicList>
+            <unitList>s,m,klbf</unitList>
+            <data>2020-06-30T17:44:33.0000000+08:00,105.99809,198.86137</data>
+            <data>2020-06-30T17:44:43.0000000+08:00,105.39138,196.16626</data>
+            <data>2020-06-30T17:44:53.0000000+08:00,104.79418,196.39658</data>
+            <data>2020-06-30T17:45:03.0000000+08:00,105.7701,197.67217</data>
+            <data>2020-06-30T17:45:13.0000000+08:00,105.35407,196.24135</data>
+            <data>2020-06-30T17:45:23.0000000+08:00,104.90993,196.53492</data>
+            <data>2020-06-30T17:45:33.0000000+08:00,105.40005,197.9437</data>
+            <data>2020-06-30T17:45:43.0000000+08:00,105.70097,198.00042</data>
+            <data>2020-06-30T17:45:53.0000000+08:00,105.58966,194.2704</data>
+            <data>2020-06-30T17:46:03.0000000+08:00,104.76083,195.6456</data>
+        </logData>
+    </log>
+</logs>
