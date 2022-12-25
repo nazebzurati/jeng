@@ -27,9 +27,9 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -e .[dev]
-    - name: Lint with flake8
+    - name: Lint with black
       run: |
         black --line-length 120 .
     - name: Test with pytest
       run: |
-        tox -- -m unit
+        pytest -m unit -v

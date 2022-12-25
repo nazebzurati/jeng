@@ -2,7 +2,7 @@
 
 A simple WITSML client with utilities.
 
-Testing is done locally for now. So, no CI test badge status at the moment.
+[![Unit test](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml/badge.svg)](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml)
 
 ## Installation
 
