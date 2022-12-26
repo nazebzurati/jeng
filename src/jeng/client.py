@@ -1,3 +1,5 @@
+import os
+
 import requests
 import urllib3
 from requests import Session
@@ -5,6 +7,7 @@ from requests.auth import HTTPBasicAuth
 from zeep import Client, proxy, xsd
 from zeep.transports import Transport
 
+import jeng
 from jeng import exception
 
 # disabling urllib warnings
@@ -16,12 +19,13 @@ class WitsmlClient:
 
     def __init__(self):
         self.__client = None
+        self.__service = None
         self.__session = Session()
 
     def __test(self):
         # exception will be caught by function caller
         return (
-            self.__client.service.WMLS_GetBaseMsg(
+            self.__service.WMLS_GetBaseMsg(
                 ReturnValueIn=1,
             )
         ).strip() == "Function completed successfully"
@@ -38,7 +42,7 @@ class WitsmlClient:
         Parameters
         ----------
         url : str
-            WSDL from a WITSML Store web service URL (usually ends with '?wsdl')
+            WITSML Store service endpoint
         username : str
             Username for user authentication
         password : str
@@ -49,15 +53,20 @@ class WitsmlClient:
         bool
             Status of the connection (True is OK)
         """
+        wsdl_file_path = os.path.join(jeng.__path__[0], "xml", "WMLS.WSDL")
+        witsml_binding_uri = "{http://www.witsml.org/wsdl/120}StoreSoapBinding"
         self.__session.auth = HTTPBasicAuth(username, password)
         try:
-            self.__client = Client(url, transport=Transport(session=self.__session))
+            self.__client = Client(transport=Transport(session=self.__session), wsdl=wsdl_file_path)
+            self.__service = self.__client.create_service(witsml_binding_uri, url)
             return self.__test()
         except requests.exceptions.SSLError:
             self.__session.verify = False
-            self.__client = Client(url, transport=Transport(session=self.__session))
+            self.__client = Client(transport=Transport(session=self.__session), wsdl=wsdl_file_path)
+            self.__service = self.__client.create_service(witsml_binding_uri, url)
             return self.__test()
-        except Exception:
+        except Exception as e:
+            print(str(e))
             return False
 
     def service(self) -> proxy.ServiceProxy:
@@ -69,7 +78,7 @@ class WitsmlClient:
         zeep.proxy.ServiceProxy
             Service proxy for calling API functions
         """
-        return self.__client.service
+        return self.__service
 
     def get_from_store(
         self,
@@ -95,7 +104,7 @@ class WitsmlClient:
             API call reply
         """
         try:
-            return self.__client.service.WMLS_GetFromStore(
+            return self.__service.WMLS_GetFromStore(
                 WMLtypeIn=wml_type_in,
                 QueryIn=xml_in,
                 OptionsIn=f"returnElements={return_element}",
@@ -125,7 +134,7 @@ class WitsmlClient:
             API call reply
         """
         try:
-            return self.__client.service.WMLS_AddToStore(
+            return self.__service.WMLS_AddToStore(
                 WMLtypeIn=wml_type_in,
                 XMLin=xml_in,
                 OptionsIn=xsd.SkipValue,
@@ -155,7 +164,7 @@ class WitsmlClient:
             API call reply.
         """
         try:
-            return self.__client.service.WMLS_UpdateInStore(
+            return self.__service.WMLS_UpdateInStore(
                 WMLtypeIn=wml_type_in,
                 XMLin=xml_in,
                 OptionsIn=xsd.SkipValue,
@@ -185,7 +194,7 @@ class WitsmlClient:
             API call reply.
         """
         try:
-            return self.__client.service.WMLS_DeleteFromStore(
+            return self.__service.WMLS_DeleteFromStore(
                 WMLtypeIn=wml_type_in,
                 QueryIn=xml_in,
                 OptionsIn=xsd.SkipValue,

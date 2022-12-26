@@ -1,4 +1,8 @@
+include *.in
 include *.md
+include *.properties
 include pytest.ini
+recursive-include src *.WSDL
+recursive-include tests *.csv
 recursive-include tests *.py
 recursive-include tests *.xml
