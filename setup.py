@@ -5,7 +5,7 @@ with open("readme.md", "r") as doc:
 
 setup(
     name="jeng",
-    version="0.0.5",
+    version="0.0.6",
     license="MIT",
     description="A simple WITSML client with utilities.",
     long_description=long_description,
@@ -15,6 +15,7 @@ setup(
     url="https://github.com/nazebzurati/jeng",
     packages=find_packages("src"),
     package_dir={"": "src"},
+    include_package_data=True,
     py_modules=[
         "jeng",
     ],

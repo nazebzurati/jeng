@@ -1,3 +1,5 @@
+import os
+
 import requests
 import urllib3
 from requests import Session
@@ -5,6 +7,7 @@ from requests.auth import HTTPBasicAuth
 from zeep import Client, proxy, xsd
 from zeep.transports import Transport
 
+import jeng
 from jeng import exception
 
 # disabling urllib warnings
@@ -50,7 +53,7 @@ class WitsmlClient:
         bool
             Status of the connection (True is OK)
         """
-        wsdl_file_path = "src/jeng/xml/WMLS.WSDL"
+        wsdl_file_path = os.path.join(jeng.__path__[0], "xml", "WMLS.WSDL")
         witsml_binding_uri = "{http://www.witsml.org/wsdl/120}StoreSoapBinding"
         self.__session.auth = HTTPBasicAuth(username, password)
         try:
