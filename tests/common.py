@@ -5,7 +5,7 @@ from xml.etree import ElementTree
 from jeng import model
 from jeng.client import WitsmlClient
 
-QUERY_PATH = "tests/query"
+QUERY_PATH = "tests/xml"
 SAMPLE_PATH = "tests/sample"
 SAMPLE_TIME_FORMAT = "%H:%M:%S/%d-%b-%Y"
 CONNECTION_URL = os.environ.get("JENG_CONN_URL")
