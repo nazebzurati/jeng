@@ -12,17 +12,17 @@ EXPECTED_COLUMN_COUNT = 3
 def test_parse_actual_reply():
 
     # load data and prepare
-    dataframe = pandas.read_csv(
-        filepath_or_buffer=f"{common.SAMPLE_PATH}/NOPIMS_LAV02ST2_LWD_8.5_Time.csv",
-        nrows=EXPECTED_ROW_COUNT,
-    )[["TIME", "DEPTH", "HKLA"]]
+    dataframe: pandas.DataFrame = common.__prepare_sample_dataset(
+        filename=common.TIME_BASED_SAMPLE_FILENAME,
+        log_curve_info_list=common.LOG_CURVE_INFO_TIME_LIST,
+    )
     dataframe["TIME"] = pandas.to_datetime(dataframe["TIME"], format=common.SAMPLE_TIME_FORMAT)
     dataframe = dataframe.set_index("TIME")
 
     # create log with data
     log_query = generate.generate_log_query(
         log_basic_info=common.LOG_INFO_WELL_WELLBORE,
-        log_curve_info_list=common.LOG_TIME_INFO_CURVE_LIST,
+        log_curve_info_list=common.LOG_CURVE_INFO_TIME_LIST,
         dataframe=dataframe,
     )
     client = common.__connect_and_prepare()
@@ -35,7 +35,7 @@ def test_parse_actual_reply():
     # get log data
     log_query = generate.generate_log_query(
         log_basic_info=common.LOG_INFO_WELL_WELLBORE,
-        log_curve_info_list=common.LOG_TIME_INFO_CURVE_LIST,
+        log_curve_info_list=common.LOG_CURVE_INFO_TIME_LIST,
         dataframe=None,
     )
     reply = client.get_from_store(

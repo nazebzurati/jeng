@@ -2,12 +2,15 @@ import io
 import os
 from xml.etree import ElementTree
 
-from jeng import model
-from jeng.client import WitsmlClient
+import pandas
+
+from jeng import jeng, model
 
 QUERY_PATH = "tests/xml"
 SAMPLE_PATH = "tests/sample"
 SAMPLE_TIME_FORMAT = "%H:%M:%S/%d-%b-%Y"
+TIME_BASED_SAMPLE_FILENAME = "NOPIMS_LAV02ST2_LWD_8.5_Time"
+DEPTH_BASED_SAMPLE_FILENAME = "NOPIMS_LAV02ST2_LWD_8.5_Depth"
 CONNECTION_URL = os.environ.get("JENG_CONN_URL")
 CONNECTION_USERNAME = os.environ.get("JENG_CONN_USERNAME")
 CONNECTION_PASSWORD = os.environ.get("JENG_CONN_PASSWORD")
@@ -19,7 +22,7 @@ LOG_INFO_WELL_WELLBORE = model.LogBasicInfoModel(
     log_uid="LOG_001",
     log_name="LOG 001",
 )
-LOG_TIME_INFO_CURVE_LIST = [
+LOG_CURVE_INFO_TIME_LIST = [
     model.LogCurveInfoModel(
         uid="TIME",
         mnemonic="TIME",
@@ -44,7 +47,7 @@ LOG_TIME_INFO_CURVE_LIST = [
         type_log_data="double",
     ),
 ]
-LOG_DEPTH_INFO_CURVE_LIST = [
+LOG_CURVE_INFO_DEPTH_LIST = [
     model.LogCurveInfoModel(
         uid="DEPT",
         mnemonic="DEPT",
@@ -80,8 +83,8 @@ def __parse_and_remove_ns(xml: str):
     return it.root
 
 
-def __connect() -> WitsmlClient:
-    client = WitsmlClient()
+def __connect() -> jeng.WitsmlClient:
+    client = jeng.WitsmlClient()
     assert client.connect(
         url=CONNECTION_URL,
         username=CONNECTION_USERNAME,
@@ -90,7 +93,7 @@ def __connect() -> WitsmlClient:
     return client
 
 
-def __connect_and_prepare() -> WitsmlClient:
+def __connect_and_prepare() -> jeng.WitsmlClient:
 
     client = __connect()
 
@@ -113,7 +116,7 @@ def __connect_and_prepare() -> WitsmlClient:
     return client
 
 
-def __delete_and_clean_witsml(client: WitsmlClient):
+def __delete_and_clean_witsml(client: jeng.WitsmlClient):
 
     # delete log
     with open(f"{QUERY_PATH}/log_delete.xml", "r") as query:
@@ -138,3 +141,14 @@ def __delete_and_clean_witsml(client: WitsmlClient):
             xml_in=query.read(),
         )
         assert reply is not None and reply.Result == 1
+
+
+def __prepare_sample_dataset(
+    filename: str,
+    log_curve_info_list: list[model.LogCurveInfoModel],
+):
+    registered_mnemonic = [log_curve_info.mnemonic for log_curve_info in log_curve_info_list]
+    return pandas.read_csv(
+        filepath_or_buffer=f"{SAMPLE_PATH}/{filename}.csv",
+        nrows=10,
+    )[registered_mnemonic]

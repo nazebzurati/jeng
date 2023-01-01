@@ -12,15 +12,18 @@ pip install jeng
 
 ## Getting started
 
-Jeng should be compatible with Python 3.8 and higher.
+- Jeng should be compatible with Python 3.8 and higher.
+- Jeng should work with WITSML data schema v1.3.1.1 and v1.4.1.1.
+- Incompatible package version update:
+  - `0.0.6` → `0.0.7`: Change from `jeng.client.WitsmlClient` package to `jeng.jeng.WitsmlClient`
 
 ### Client
 
 1. To create and connect to WITSML Server:
     ```python
-    from jeng.client import WitsmlClient
+    from jeng import jeng
 
-    client = WitsmlClient()
+    client = jeng.WitsmlClient()
 
     # return True if success, else False
     status = client.connect(
@@ -90,7 +93,7 @@ log_basic_info = model.LogBasicInfoModel(
     log_name="LOG 001",
 )
 
-# set log curve info
+# set time log curve info
 log_curve_info_list = [
     model.LogCurveInfoModel(
         uid="TIME",
@@ -98,7 +101,36 @@ log_curve_info_list = [
         unit="s",
         curve_description="Time",
         type_log_data="date time",
+        index_type="date time",
         is_index_curve=True,
+    ),
+    model.LogCurveInfoModel(
+        uid="HKLA",
+        mnemonic="HKLA",
+        unit="klbf",
+        curve_description="Average Hookload",
+        type_log_data="double",
+    ),
+    ...
+]
+
+# set depth log curve info
+log_curve_info_list = [
+    model.LogCurveInfoModel(
+        uid="DEPTH",
+        mnemonic="DEPTH",
+        unit="m",
+        curve_description="Depth Index",
+        type_log_data="double",
+        index_type="measured depth",
+        is_index_curve=True,
+    ),
+    model.LogCurveInfoModel(
+        uid="HKLA",
+        mnemonic="HKLA",
+        unit="klbf",
+        curve_description="Average Hookload",
+        type_log_data="double",
     ),
     ...
 ]
@@ -108,8 +140,31 @@ log_curve_info_list = [
 # generate query (make sure to use mnemonic as column name)
 query_xml = generate.generate_log_query(
     log_basic_info=log_basic_info,
-    log_curve_info_list=log_curve_info_list,
+    log_curve_info_list=log_curve_info_time_list,
     dataframe=dataframe,
+)
+
+# it's possible to generate WMLS_GetFromStore compatible
+# query with specific time interval
+query_xml = generate.generate_log_query(
+    log_basic_info=log_basic_info,
+    log_curve_info_list=log_curve_info_time_list,
+    log_index=model.LogIndexModel(
+        start="2020-06-30T17:44:00.000+08:00",
+        end="2020-06-30T17:45:00.000+08:00",
+    ),
+)
+
+# it's possible to generate WMLS_GetFromStore compatible
+# query with specific non-time interval
+query_xml = generate.generate_log_query(
+    log_basic_info=log_basic_info,
+    log_curve_info_list=log_curve_info_depth_list,
+    log_index=model.LogIndexModel(
+        start="2575.2",
+        end="2575.5",
+        type=model.LogIndexTypeEnum.NON_TIME,
+    ),
 )
 ```
 

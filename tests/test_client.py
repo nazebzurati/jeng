@@ -1,12 +1,12 @@
 import common
 import pytest
 
-from jeng.client import WitsmlClient
+from jeng import jeng
 
 
 @pytest.mark.integration
 def test_incorrect_credentials():
-    client = WitsmlClient()
+    client = jeng.WitsmlClient()
     status = client.connect(
         url=common.CONNECTION_URL,
         username=f"{common.CONNECTION_USERNAME}$",
@@ -17,7 +17,7 @@ def test_incorrect_credentials():
 
 @pytest.mark.integration
 def test_incorrect_credentials_username():
-    client = WitsmlClient()
+    client = jeng.WitsmlClient()
     status = client.connect(
         url=common.CONNECTION_URL,
         username=f"{common.CONNECTION_USERNAME}$",
@@ -28,7 +28,7 @@ def test_incorrect_credentials_username():
 
 @pytest.mark.integration
 def test_incorrect_credentials_password():
-    client = WitsmlClient()
+    client = jeng.WitsmlClient()
     status = client.connect(
         url=common.CONNECTION_URL,
         username=common.CONNECTION_USERNAME,
@@ -99,7 +99,7 @@ def test_direct_call():
 
 @pytest.mark.integration
 def test_api_call_before_connect():
-    client = WitsmlClient()
+    client = jeng.WitsmlClient()
     with open(f"{common.QUERY_PATH}/well_create.xml", "r") as query:
         with pytest.raises(Exception):
             client.add_to_store(
