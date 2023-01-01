@@ -22,7 +22,7 @@ def test_parse_actual_reply():
     # create log with data
     log_query = generate.generate_log_query(
         log_basic_info=common.LOG_INFO_WELL_WELLBORE,
-        log_curve_info_list=common.LOG_INFO_CURVE_LIST,
+        log_curve_info_list=common.LOG_TIME_INFO_CURVE_LIST,
         dataframe=dataframe,
     )
     client = common.__connect_and_prepare()
@@ -35,7 +35,7 @@ def test_parse_actual_reply():
     # get log data
     log_query = generate.generate_log_query(
         log_basic_info=common.LOG_INFO_WELL_WELLBORE,
-        log_curve_info_list=common.LOG_INFO_CURVE_LIST,
+        log_curve_info_list=common.LOG_TIME_INFO_CURVE_LIST,
         dataframe=None,
     )
     reply = client.get_from_store(

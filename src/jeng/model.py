@@ -1,3 +1,8 @@
+class LogIndexTypeEnum:
+    TIME = 0
+    NON_TIME = 1
+
+
 class LogCurveInfoModel:
     def __init__(
         self,
@@ -6,6 +11,7 @@ class LogCurveInfoModel:
         unit: str,
         curve_description: str,
         type_log_data: str,
+        index_type: str = None,
         is_index_curve: bool = False,
     ) -> None:
         self.uid = uid
@@ -13,6 +19,7 @@ class LogCurveInfoModel:
         self.unit = unit
         self.curve_description = curve_description
         self.type_log_data = type_log_data
+        self.index_type = index_type
         self.is_index_curve = is_index_curve
 
 
@@ -32,3 +39,15 @@ class LogBasicInfoModel:
         self.wellbore_name = wellbore_name
         self.log_uid = log_uid
         self.log_name = log_name
+
+
+class LogIndexModel:
+    def __init__(
+        self,
+        start: str,
+        end: str,
+        type: LogIndexTypeEnum = LogIndexTypeEnum.TIME,
+    ) -> None:
+        self.start = start
+        self.end = end
+        self.type = type

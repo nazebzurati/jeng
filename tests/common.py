@@ -19,13 +19,14 @@ LOG_INFO_WELL_WELLBORE = model.LogBasicInfoModel(
     log_uid="LOG_001",
     log_name="LOG 001",
 )
-LOG_INFO_CURVE_LIST = [
+LOG_TIME_INFO_CURVE_LIST = [
     model.LogCurveInfoModel(
         uid="TIME",
         mnemonic="TIME",
         unit="s",
         curve_description="Time",
         type_log_data="date time",
+        index_type="date time",
         is_index_curve=True,
     ),
     model.LogCurveInfoModel(
@@ -34,6 +35,24 @@ LOG_INFO_CURVE_LIST = [
         unit="m",
         curve_description="Depth Index",
         type_log_data="double",
+    ),
+    model.LogCurveInfoModel(
+        uid="HKLA",
+        mnemonic="HKLA",
+        unit="klbf",
+        curve_description="Average Hookload",
+        type_log_data="double",
+    ),
+]
+LOG_DEPTH_INFO_CURVE_LIST = [
+    model.LogCurveInfoModel(
+        uid="DEPT",
+        mnemonic="DEPT",
+        unit="m",
+        curve_description="Depth Index",
+        type_log_data="double",
+        index_type="measured depth",
+        is_index_curve=True,
     ),
     model.LogCurveInfoModel(
         uid="HKLA",

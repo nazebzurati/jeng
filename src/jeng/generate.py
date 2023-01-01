@@ -75,6 +75,7 @@ def generate_log_query(
     log_basic_info: model.LogBasicInfoModel,
     log_curve_info_list: List[model.LogCurveInfoModel],
     dataframe: pandas.DataFrame = None,
+    log_index: model.LogIndexModel = None,
     is_include_log_curve_info: bool = True,
 ) -> str:
     """
@@ -92,6 +93,8 @@ def generate_log_query(
         the dataframe index name was set similar to index curve uid. If the index name was
         not set or match, the function will attempt to find the index curve uid among the
         column names.
+    log_index: jeng.model.LogIndexModel, default None
+        Query's for data from one index (start or from) to another index (end or to).
     is_include_log_curve_info: bool, default True
         WITSML query have maximum character limitation and varies between WITSML server. It
         is recommended to include log curve info for creating log for the first time and
@@ -116,12 +119,25 @@ def generate_log_query(
                 "nameWellbore": log_basic_info.wellbore_name,
                 "name": log_basic_info.log_name,
                 "indexCurve": log_curve_info_list[log_curve_index].uid,
-                "indexType": log_curve_info_list[log_curve_index].type_log_data,
+                "indexType": log_curve_info_list[log_curve_index].index_type,
             },
         },
     }
     if is_include_log_curve_info:
         all_dict["logs"]["log"]["logCurveInfo"] = log_curve_info_dict
+    if log_index is not None:
+        if log_index.type == model.LogIndexTypeEnum.TIME:
+            all_dict["logs"]["log"]["startDateTimeIndex"] = log_index.start
+            all_dict["logs"]["log"]["endDateTimeIndex"] = log_index.end
+        elif log_index.type == model.LogIndexTypeEnum.NON_TIME:
+            all_dict["logs"]["log"]["startIndex"] = {
+                "#text": log_index.start,
+                "@uom": log_curve_info_list[log_curve_index].unit,
+            }
+            all_dict["logs"]["log"]["endIndex"] = {
+                "#text": log_index.end,
+                "@uom": log_curve_info_list[log_curve_index].unit,
+            }
 
     # prepare dataframe
     if dataframe is not None and not dataframe.empty:
