@@ -40,12 +40,14 @@ class WitsmlClient:
 
         Parameters
         ----------
-        url : str
-            WITSML Store service endpoint
-        username : str
-            Username for user authentication
-        password : str
-            Password for user authentication
+        url: str
+            WITSML Store service endpoint.
+
+        username: str
+            Username for user authentication.
+
+        password: str
+            Password for user authentication.
 
         Returns
         -------
@@ -90,12 +92,15 @@ class WitsmlClient:
 
         Parameters
         ----------
-        wml_type_in : str
+        wml_type_in: str
             WITSML data-object type (see the specific WITSML data schema for the objectType).
-        xml_in : str
+
+        xml_in: str
             A query template that specifies the data-object to be returned.
-        return_element : str
-            Indicates which elements and attributes are requested to be returned in addition to data-object selection items.
+
+        return_element: str
+            Indicates which elements and attributes are requested to be returned in addition
+            to data-object selection items.
 
         Returns
         -------
@@ -122,9 +127,10 @@ class WitsmlClient:
 
         Parameters
         ----------
-        wml_type_in : str
+        wml_type_in: str
             WITSML data-object type (see the specific WITSML data schema for the objectType).
-        xml_in : str
+
+        xml_in: str
             A query template that specifies WITSML data-object to be added.
 
         Returns
@@ -152,9 +158,10 @@ class WitsmlClient:
 
         Parameters
         ----------
-        wml_type_in : str
+        wml_type_in: str
             WITSML data-object type (see the specific WITSML data schema for the objectType).
-        xml_in : str
+
+        xml_in: str
             A query template that specifies WITSML data-object to be updated.
 
         Returns
@@ -182,9 +189,10 @@ class WitsmlClient:
 
         Parameters
         ----------
-        wml_type_in : str
+        wml_type_in: str
             WITSML data-object type (see the specific WITSML data schema for the objectType).
-        xml_in : str
+
+        xml_in: str
             A query template that specifies WITSML data-object to be deleted.
 
         Returns

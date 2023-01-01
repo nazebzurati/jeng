@@ -84,21 +84,26 @@ def generate_log_query(
 
     Parameters
     ----------
-    log_basic_info : jeng.model.LogBasicInfoModel
+    log_basic_info: jeng.model.LogBasicInfoModel
         Well, wellbore and log information for query generation.
-    log_curve_info_list : List[jeng.model.LogCurveInfoModel]
+
+    log_curve_info_list: List[jeng.model.LogCurveInfoModel]
         A list of curve info which contains uid, mnemonic, unit, description and data type.
+
     dataframe: pandas.DataFrame, default None
         pandas.DataFrame that contains data which mnemonic as column name. It is best if
         the dataframe index name was set similar to index curve uid. If the index name was
         not set or match, the function will attempt to find the index curve uid among the
         column names.
+
     log_index: jeng.model.LogIndexModel, default None
-        Query's for data from one index (start or from) to another index (end or to).
+        Specify interval required for getting data from WITSML Store. Compatible for both
+        time and non-time interval type.
+
     is_include_log_curve_info: bool, default True
-        WITSML query have maximum character limitation and varies between WITSML server. It
-        is recommended to include log curve info for creating log for the first time and
-        not to include for adding and updating data.
+        WITSML query have maximum character limitation and varies between WITSML server.
+        It's recommended to include log curve info for creating log and exclude them for
+        updating and getting data.
 
     Returns
     -------
@@ -123,8 +128,6 @@ def generate_log_query(
             },
         },
     }
-    if is_include_log_curve_info:
-        all_dict["logs"]["log"]["logCurveInfo"] = log_curve_info_dict
     if log_index is not None:
         if log_index.type == model.LogIndexTypeEnum.TIME:
             all_dict["logs"]["log"]["startDateTimeIndex"] = log_index.start
@@ -138,6 +141,8 @@ def generate_log_query(
                 "#text": log_index.end,
                 "@uom": log_curve_info_list[log_curve_index].unit,
             }
+    if is_include_log_curve_info:
+        all_dict["logs"]["log"]["logCurveInfo"] = log_curve_info_dict
 
     # prepare dataframe
     if dataframe is not None and not dataframe.empty:
