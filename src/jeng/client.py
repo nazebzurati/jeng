@@ -24,11 +24,10 @@ class WitsmlClient:
 
     def __test(self):
         # exception will be caught by function caller
-        return (
-            self.__service.WMLS_GetBaseMsg(
-                ReturnValueIn=1,
-            )
-        ).strip() == "Function completed successfully"
+        reply = self.__service.WMLS_GetBaseMsg(
+            ReturnValueIn=1,
+        )
+        return reply.strip() == "Function completed successfully"
 
     def connect(
         self,

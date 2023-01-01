@@ -7,40 +7,34 @@ from jeng.client import WitsmlClient
 @pytest.mark.integration
 def test_incorrect_credentials():
     client = WitsmlClient()
-    assert (
-        client.connect(
-            url=common.CONNECTION_URL,
-            username=f"{common.CONNECTION_USERNAME}$",
-            password=f"{common.CONNECTION_PASSWORD}$",
-        )
-        == False
+    status = client.connect(
+        url=common.CONNECTION_URL,
+        username=f"{common.CONNECTION_USERNAME}$",
+        password=f"{common.CONNECTION_PASSWORD}$",
     )
+    assert status == False
 
 
 @pytest.mark.integration
 def test_incorrect_credentials_username():
     client = WitsmlClient()
-    assert (
-        client.connect(
-            url=common.CONNECTION_URL,
-            username=f"{common.CONNECTION_USERNAME}$",
-            password=common.CONNECTION_PASSWORD,
-        )
-        == False
+    status = client.connect(
+        url=common.CONNECTION_URL,
+        username=f"{common.CONNECTION_USERNAME}$",
+        password=common.CONNECTION_PASSWORD,
     )
+    assert status == False
 
 
 @pytest.mark.integration
 def test_incorrect_credentials_password():
     client = WitsmlClient()
-    assert (
-        client.connect(
-            url=common.CONNECTION_URL,
-            username=common.CONNECTION_USERNAME,
-            password=f"{common.CONNECTION_PASSWORD}$",
-        )
-        == False
+    status = client.connect(
+        url=common.CONNECTION_URL,
+        username=common.CONNECTION_USERNAME,
+        password=f"{common.CONNECTION_PASSWORD}$",
     )
+    assert status == False
 
 
 @pytest.mark.integration
