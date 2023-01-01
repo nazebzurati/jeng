@@ -145,7 +145,7 @@ def __delete_and_clean_witsml(client: jeng.WitsmlClient):
 
 def __prepare_sample_dataset(
     filename: str,
-    log_curve_info_list: list[model.LogCurveInfoModel],
+    log_curve_info_list,
 ):
     registered_mnemonic = [log_curve_info.mnemonic for log_curve_info in log_curve_info_list]
     return pandas.read_csv(
