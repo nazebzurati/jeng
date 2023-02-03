@@ -13,6 +13,7 @@ from jeng import exception
 # disabling urllib warnings
 urllib3.disable_warnings()
 
+
 # witsml client
 class WitsmlClient:
     "A WITSML client that handles WITSML authentication and communication."

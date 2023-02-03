@@ -10,7 +10,6 @@ EXPECTED_COLUMN_COUNT = 3
 
 @pytest.mark.integration
 def test_parse_actual_reply():
-
     # load data and prepare
     dataframe: pandas.DataFrame = common.__prepare_sample_dataset(
         filename=common.TIME_BASED_SAMPLE_FILENAME,

@@ -73,7 +73,7 @@ def __prepare_log_data_list(
 
 def generate_log_query(
     log_basic_info: model.LogBasicInfoModel,
-    log_curve_info_list: List[model.LogCurveInfoModel],
+    log_curve_info_list: List[model.LogCurveInfoModel] = None,
     dataframe: pandas.DataFrame = None,
     log_index: model.LogIndexModel = None,
     is_include_log_curve_info: bool = True,
@@ -87,8 +87,10 @@ def generate_log_query(
     log_basic_info: jeng.model.LogBasicInfoModel
         Well, wellbore and log information for query generation.
 
-    log_curve_info_list: List[jeng.model.LogCurveInfoModel]
+    log_curve_info_list: List[jeng.model.LogCurveInfoModel], default None
         A list of curve info which contains uid, mnemonic, unit, description and data type.
+        If left empty or set None, only query that contains log_basic_info is generated.
+        dataframe and log_index are not generated.
 
     dataframe: pandas.DataFrame, default None
         pandas.DataFrame that contains data which mnemonic as column name. It is best if
@@ -110,8 +112,7 @@ def generate_log_query(
     str
         Log query ready to be executed.
     """
-    # prepare log curve info data
-    log_curve_info_dict, log_curve_index = __prepare_log_curve_info(log_curve_info_list)
+    # prepare basic log curve
     all_dict = {
         "logs": {
             "@xmlns": WITSML_NAMESPACE,
@@ -123,49 +124,55 @@ def generate_log_query(
                 "nameWell": log_basic_info.well_name,
                 "nameWellbore": log_basic_info.wellbore_name,
                 "name": log_basic_info.log_name,
-                "indexCurve": log_curve_info_list[log_curve_index].uid,
-                "indexType": log_curve_info_list[log_curve_index].index_type,
             },
         },
     }
-    if log_index is not None:
-        if log_index.type == model.LogIndexTypeEnum.TIME:
-            all_dict["logs"]["log"]["startDateTimeIndex"] = log_index.start
-            all_dict["logs"]["log"]["endDateTimeIndex"] = log_index.end
-        elif log_index.type == model.LogIndexTypeEnum.NON_TIME:
-            all_dict["logs"]["log"]["startIndex"] = {
-                "#text": log_index.start,
-                "@uom": log_curve_info_list[log_curve_index].unit,
-            }
-            all_dict["logs"]["log"]["endIndex"] = {
-                "#text": log_index.end,
-                "@uom": log_curve_info_list[log_curve_index].unit,
-            }
-    if is_include_log_curve_info:
-        all_dict["logs"]["log"]["logCurveInfo"] = log_curve_info_dict
 
-    # prepare dataframe
-    if dataframe is not None and not dataframe.empty:
-        dataframe = __prepare_dataframe_index(
-            log_curve_info_list=log_curve_info_list,
-            log_curve_index=log_curve_index,
-            dataframe=dataframe,
-        )
+    # prepare log curve info data
+    if log_curve_info_list is not None and len(log_curve_info_list) > 0:
+        log_curve_info_dict, log_curve_index = __prepare_log_curve_info(log_curve_info_list)
+        all_dict["logs"]["log"]["indexCurve"] = log_curve_info_list[log_curve_index].uid
+        all_dict["logs"]["log"]["indexType"] = log_curve_info_list[log_curve_index].index_type
+        if is_include_log_curve_info:
+            all_dict["logs"]["log"]["logCurveInfo"] = log_curve_info_dict
 
-        # generate log data list
-        mnemonic_list, unit_list, data_list = __prepare_log_data_list(
-            log_curve_info_list=log_curve_info_list,
-            log_curve_index=log_curve_index,
-            dataframe=dataframe,
-        )
+        # prepare log index
+        if log_index is not None:
+            if log_index.type == model.LogIndexTypeEnum.TIME:
+                all_dict["logs"]["log"]["startDateTimeIndex"] = log_index.start
+                all_dict["logs"]["log"]["endDateTimeIndex"] = log_index.end
+            elif log_index.type == model.LogIndexTypeEnum.NON_TIME:
+                all_dict["logs"]["log"]["startIndex"] = {
+                    "#text": log_index.start,
+                    "@uom": log_curve_info_list[log_curve_index].unit,
+                }
+                all_dict["logs"]["log"]["endIndex"] = {
+                    "#text": log_index.end,
+                    "@uom": log_curve_info_list[log_curve_index].unit,
+                }
 
-        all_dict["logs"]["log"]["logData"] = (
-            {
-                "mnemonicList": ",".join(mnemonic_list),
-                "unitList": ",".join(unit_list),
-                "data": data_list,
-            },
-        )
+        # prepare dataframe
+        if dataframe is not None and not dataframe.empty:
+            dataframe = __prepare_dataframe_index(
+                log_curve_info_list=log_curve_info_list,
+                log_curve_index=log_curve_index,
+                dataframe=dataframe,
+            )
+
+            # generate log data list
+            mnemonic_list, unit_list, data_list = __prepare_log_data_list(
+                log_curve_info_list=log_curve_info_list,
+                log_curve_index=log_curve_index,
+                dataframe=dataframe,
+            )
+
+            all_dict["logs"]["log"]["logData"] = (
+                {
+                    "mnemonicList": ",".join(mnemonic_list),
+                    "unitList": ",".join(unit_list),
+                    "data": data_list,
+                },
+            )
 
     # generate log data
     return xmltodict.unparse(all_dict, full_document=False)

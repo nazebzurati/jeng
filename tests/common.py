@@ -94,7 +94,6 @@ def __connect() -> jeng.WitsmlClient:
 
 
 def __connect_and_prepare() -> jeng.WitsmlClient:
-
     client = __connect()
 
     # create well
@@ -117,7 +116,6 @@ def __connect_and_prepare() -> jeng.WitsmlClient:
 
 
 def __delete_and_clean_witsml(client: jeng.WitsmlClient):
-
     # delete log
     with open(f"{QUERY_PATH}/log_delete.xml", "r") as query:
         reply = client.delete_from_store(

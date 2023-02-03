@@ -3,13 +3,13 @@ import copy
 import common
 import pandas
 import pytest
+import xmltodict
 
 from jeng import exception, generate, jeng, model, parse
 
 
 @pytest.mark.unit
 def test_generate_log_missing_unit():
-
     # load data and prepare
     dataframe = common.__prepare_sample_dataset(
         filename=common.TIME_BASED_SAMPLE_FILENAME,
@@ -28,7 +28,6 @@ def test_generate_log_missing_unit():
 
 @pytest.mark.unit
 def test_generate_log_missing_curve_index_in_dataframe():
-
     # load data and prepare
     dataframe = common.__prepare_sample_dataset(
         filename=common.TIME_BASED_SAMPLE_FILENAME,
@@ -46,7 +45,6 @@ def test_generate_log_missing_curve_index_in_dataframe():
 
 @pytest.mark.unit
 def test_generate_no_index_curve_info():
-
     # load data and prepare
     dataframe = common.__prepare_sample_dataset(
         filename=common.TIME_BASED_SAMPLE_FILENAME,
@@ -67,7 +65,6 @@ def test_generate_no_index_curve_info():
 
 @pytest.mark.unit
 def test_generate_multiple_index_curve_info():
-
     # load data and prepare
     dataframe = common.__prepare_sample_dataset(
         filename=common.TIME_BASED_SAMPLE_FILENAME,
@@ -89,7 +86,6 @@ def test_generate_multiple_index_curve_info():
 @pytest.mark.integration
 @pytest.mark.dependency()
 def test_generate_log_full_no_index():
-
     # load data and prepare
     dataframe = common.__prepare_sample_dataset(
         filename=common.TIME_BASED_SAMPLE_FILENAME,
@@ -119,7 +115,6 @@ def test_generate_log_full_no_index():
 @pytest.mark.integration
 @pytest.mark.dependency(depends=["test_generate_log_full_no_index"])
 def test_generate_log_full():
-
     # load data and prepare
     dataframe = common.__prepare_sample_dataset(
         filename=common.TIME_BASED_SAMPLE_FILENAME,
@@ -150,7 +145,6 @@ def test_generate_log_full():
 @pytest.mark.integration
 @pytest.mark.dependency(depends=["test_generate_log_full"])
 def test_generate_log_header_only():
-
     # generate log
     log_query = generate.generate_log_query(
         log_basic_info=common.LOG_INFO_WELL_WELLBORE,
@@ -169,7 +163,6 @@ def test_generate_log_header_only():
 @pytest.mark.integration
 @pytest.mark.dependency(depends=["test_generate_log_header_only"])
 def test_generate_log_data_only():
-
     # load data and prepare
     dataframe = common.__prepare_sample_dataset(
         filename=common.TIME_BASED_SAMPLE_FILENAME,
@@ -201,7 +194,6 @@ def test_generate_log_data_only():
 @pytest.mark.integration
 @pytest.mark.dependency(depends=["test_generate_log_header_only"])
 def test_generate_log_data_with_time_index():
-
     # load data and prepare
     dataframe = common.__prepare_sample_dataset(
         filename=common.TIME_BASED_SAMPLE_FILENAME,
@@ -252,7 +244,6 @@ def test_generate_log_data_with_time_index():
 @pytest.mark.integration
 @pytest.mark.dependency(depends=["test_generate_log_data_with_time_index"])
 def test_generate_log_data_with_depth_index():
-
     # load data and prepare
     dataframe = common.__prepare_sample_dataset(
         filename=common.DEPTH_BASED_SAMPLE_FILENAME,
@@ -298,3 +289,37 @@ def test_generate_log_data_with_depth_index():
 
     # clean up WITMSL data on server
     common.__delete_and_clean_witsml(client)
+
+
+@pytest.mark.unit
+def test_generate_log_without_log_curve_info():
+    # generate log
+    query = generate.generate_log_query(
+        log_basic_info=common.LOG_INFO_WELL_WELLBORE,
+    )
+    query_parsed = xmltodict.parse(query)
+    assert not [
+        item for item in ["indexCurve", "indexType", "logCurveInfo"] if item in query_parsed["logs"]["log"].keys()
+    ]
+
+
+@pytest.mark.unit
+def test_generate_log_without_log_curve_info_with_dataframe():
+    # load data and prepare
+    dataframe = common.__prepare_sample_dataset(
+        filename=common.TIME_BASED_SAMPLE_FILENAME,
+        log_curve_info_list=common.LOG_CURVE_INFO_TIME_LIST,
+    )
+    dataframe["TIME"] = pandas.to_datetime(dataframe["TIME"], format=common.SAMPLE_TIME_FORMAT)
+
+    # generate log
+    query = generate.generate_log_query(
+        log_basic_info=common.LOG_INFO_WELL_WELLBORE,
+        dataframe=dataframe,
+    )
+    query_parsed = xmltodict.parse(query)
+    assert not [
+        item
+        for item in ["indexCurve", "indexType", "logCurveInfo", "logData"]
+        if item in query_parsed["logs"]["log"].keys()
+    ]
