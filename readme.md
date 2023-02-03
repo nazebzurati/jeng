@@ -15,7 +15,7 @@ pip install jeng
 - Jeng should be compatible with Python 3.8 and higher.
 - Jeng should work with WITSML data schema v1.3.1.1 and v1.4.1.1.
 - Incompatible package version update:
-  - `0.0.6` → `0.0.7`: Change from `jeng.client.WitsmlClient` package to `jeng.jeng.WitsmlClient`
+  - `0.0.6` to `0.0.7`: Change from `jeng.client.WitsmlClient` package to `jeng.jeng.WitsmlClient`
 
 ### Client
 
@@ -136,6 +136,10 @@ log_curve_info_list = [
 ]
 
 ...
+# generate very basic query (log curve info list is optional)
+query_xml = generate.generate_log_query(
+    log_basic_info=log_basic_info,
+)
 
 # generate query (make sure to use mnemonic as column name)
 query_xml = generate.generate_log_query(
@@ -202,9 +206,8 @@ Make sure to have a WITSML server running for the test.
 
 3. Change the source code and test.
     ```bash
-    # run code formatter
-    isort . --skip env
-    black --line-length 120 .
+    # formatting
+    isort . --skip env && black --line-length 120 .
 
     # run coverage and pytest
     coverage run -m pytest -v
