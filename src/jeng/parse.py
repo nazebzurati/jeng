@@ -1,7 +1,7 @@
 import pandas
 import xmltodict
 
-from jeng import exception
+from jeng import exception, model
 
 
 def parse_log_into_dataframe(xml_out: str) -> pandas.DataFrame:
@@ -33,3 +33,50 @@ def parse_log_into_dataframe(xml_out: str) -> pandas.DataFrame:
         raise exception.JengReplyContainsNoDataAndMnemonicException
 
     return dataframe
+
+
+def parse_log_into_curve_info(xml_out: str) -> list[model.LogCurveInfoModel]:
+    """
+    Parse 'log' XMLout reply into model.LogCurveInfoModel.
+
+    Parameters
+    ----------
+    xml_out : str
+        WITSML XMLout reply string.
+
+    Returns
+    -------
+    model.LogCurveInfoModel
+        List of log curve info model.
+    """
+    parsed_xml_dict = xmltodict.parse(xml_out)
+    parsed_log_dict = parsed_xml_dict["logs"]["log"]
+
+    # parse log curve info
+    curve_info_list = []
+    if "logCurveInfo" in parsed_log_dict.keys():
+        # for a single curve info, it parsed as an object and not list.
+        # this line convert single object as list.
+        parsed_log_curve_info_list = parsed_log_dict["logCurveInfo"]
+        if not isinstance(parsed_log_dict["logCurveInfo"], list):
+            parsed_log_curve_info_list = [parsed_log_dict["logCurveInfo"]]
+
+        for parsed_log_curve_info in parsed_log_curve_info_list:
+            curve_info = model.LogCurveInfoModel(
+                uid=parsed_log_curve_info["@uid"],
+                mnemonic=parsed_log_curve_info["mnemonic"],
+                unit=parsed_log_curve_info["unit"],
+                curve_description=parsed_log_curve_info["curveDescription"],
+                type_log_data=parsed_log_curve_info["typeLogData"],
+            )
+
+            # set index, if applicable
+            if (
+                all(x in parsed_log_dict.keys() for x in ["indexCurve", "indexType"])
+                and parsed_log_dict["indexCurve"] == curve_info.mnemonic
+            ):
+                curve_info.is_index_curve = True
+                curve_info.index_type = parsed_log_dict["indexType"]
+            curve_info_list.append(curve_info)
+
+    return curve_info_list

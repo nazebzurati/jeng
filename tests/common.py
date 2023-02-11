@@ -150,3 +150,23 @@ def __prepare_sample_dataset(
         filepath_or_buffer=f"{SAMPLE_PATH}/{filename}.csv",
         nrows=10,
     )[registered_mnemonic]
+
+
+def __compare_curve_info(curve_info1, curve_info2, include_index_check=True):
+    if include_index_check:
+        return (
+            curve_info1.uid == curve_info2.uid
+            and curve_info1.mnemonic == curve_info2.mnemonic
+            and curve_info1.curve_description == curve_info2.curve_description
+            and curve_info1.type_log_data == curve_info2.type_log_data
+            and curve_info1.is_index_curve == curve_info2.is_index_curve
+            and curve_info1.index_type == curve_info2.index_type
+        )
+
+    # without index check
+    return (
+        curve_info1.uid == curve_info2.uid
+        and curve_info1.mnemonic == curve_info2.mnemonic
+        and curve_info1.curve_description == curve_info2.curve_description
+        and curve_info1.type_log_data == curve_info2.type_log_data
+    )

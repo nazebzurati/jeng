@@ -1,0 +1,41 @@
+<logs xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/terms/" version="1.4.1.1" xmlns="http://www.witsml.org/schemas/1series">
+    <log uidWell="WELL_001" uidWellbore="WELLBORE_001" uid="LOG_001">
+      <nameWell>WELL 001</nameWell>
+      <nameWellbore>WELLBORE 001</nameWellbore>
+      <name>LOG 001</name>
+      <objectGrowing>false</objectGrowing>
+      <indexType>date time</indexType>
+      <startDateTimeIndex>2020-06-30T17:44:33.0000000+08:00</startDateTimeIndex>
+      <endDateTimeIndex>2020-06-30T17:46:03.0000000+08:00</endDateTimeIndex>
+      <direction>increasing</direction>
+      <indexCurve>TIME</indexCurve>
+      <logCurveInfo uid="TIME">
+        <mnemonic>TIME</mnemonic>
+        <unit>s</unit>
+        <minDateTimeIndex>2020-06-30T17:44:33.0000000+08:00</minDateTimeIndex>
+        <maxDateTimeIndex>2020-06-30T17:46:03.0000000+08:00</maxDateTimeIndex>
+        <curveDescription>Time</curveDescription>
+        <typeLogData>date time</typeLogData>
+      </logCurveInfo>
+      <logCurveInfo uid="DEPTH">
+        <mnemonic>DEPTH</mnemonic>
+        <unit>m</unit>
+        <minDateTimeIndex>2020-06-30T17:44:33.0000000+08:00</minDateTimeIndex>
+        <maxDateTimeIndex>2020-06-30T17:46:03.0000000+08:00</maxDateTimeIndex>
+        <curveDescription>Depth Index</curveDescription>
+        <typeLogData>double</typeLogData>
+      </logCurveInfo>
+      <logCurveInfo uid="HKLA">
+        <mnemonic>HKLA</mnemonic>
+        <unit>klbf</unit>
+        <minDateTimeIndex>2020-06-30T17:44:33.0000000+08:00</minDateTimeIndex>
+        <maxDateTimeIndex>2020-06-30T17:46:03.0000000+08:00</maxDateTimeIndex>
+        <curveDescription>Average Hookload</curveDescription>
+        <typeLogData>double</typeLogData>
+      </logCurveInfo>
+      <commonData>
+        <dTimCreation>2022-12-25T17:03:37.8397562+00:00</dTimCreation>
+        <dTimLastChange>2022-12-25T17:03:37.8807497+00:00</dTimLastChange>
+      </commonData>
+    </log>
+  </logs>
