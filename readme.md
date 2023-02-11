@@ -2,7 +2,7 @@
 
 A simple WITSML client with utilities.
 
-[![Unit test](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml/badge.svg)](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml)
+[![PyPI version](https://badge.fury.io/py/jeng.svg)](https://badge.fury.io/py/jeng) [![Unit test](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml/badge.svg)](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml)
 
 ## Installation
 
@@ -14,8 +14,10 @@ pip install jeng
 
 - Jeng should be compatible with Python 3.8 and higher.
 - Jeng should work with WITSML data schema v1.3.1.1 and v1.4.1.1.
+- Jeng should work the same for both TIME log type and DEPTH log type.
+    - Log curve info list is not technically required for TIME log type. For DEPTH log type, the index log curve info is required. Thus, log curve info is set to required for `generate.generate_log_query()` to ensure the API stays consistent and not confusing.
 - Incompatible package version update:
-  - `0.0.6` to `0.0.7`: Change from `jeng.client.WitsmlClient` package to `jeng.jeng.WitsmlClient`
+    - `0.0.6` to `0.0.7`: Change from `jeng.client.WitsmlClient` package to `jeng.jeng.WitsmlClient`
 
 ### Client
 
@@ -181,6 +183,11 @@ from jeng import parse
 
 # parse WITSML XMLout reply data into dataframe
 dataframe = parse.parse_log_into_dataframe(
+    xml_out=reply["XMLout"],
+)
+
+# parse WITSML XMLout reply into model.LogCurveInfoModel
+log_curve_info_list = parse.parse_log_into_curve_info(
     xml_out=reply["XMLout"],
 )
 ```
