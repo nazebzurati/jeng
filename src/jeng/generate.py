@@ -1,4 +1,4 @@
-from typing import List
+import typing
 
 import pandas
 import xmltodict
@@ -9,7 +9,7 @@ WITSML_NAMESPACE = "http://www.witsml.org/schemas/1series"  # NOSONAR: It's a XM
 WITSML_VERSION = "1.4.1.1"  # NOSONAR: It's a version, not a hardcoded IP address
 
 
-def __prepare_log_curve_info(log_curve_info_list: List[model.LogCurveInfoModel]):
+def __prepare_log_curve_info(log_curve_info_list: typing.List[model.LogCurveInfoModel]):
     index_curve_index = -1
     index_curve_count = 0
     log_curve_info_dict = []
@@ -34,7 +34,7 @@ def __prepare_log_curve_info(log_curve_info_list: List[model.LogCurveInfoModel])
 
 
 def __prepare_dataframe_index(
-    log_curve_info_list: List[model.LogCurveInfoModel],
+    log_curve_info_list: typing.List[model.LogCurveInfoModel],
     dataframe: pandas.DataFrame,
     log_curve_index: int,
 ) -> pandas.DataFrame:
@@ -47,7 +47,7 @@ def __prepare_dataframe_index(
 
 
 def __prepare_log_data_list(
-    log_curve_info_list: List[model.LogCurveInfoModel],
+    log_curve_info_list: typing.List[model.LogCurveInfoModel],
     dataframe: pandas.DataFrame,
     log_curve_index: int,
 ):
@@ -73,7 +73,7 @@ def __prepare_log_data_list(
 
 def generate_log_query(
     log_basic_info: model.LogBasicInfoModel,
-    log_curve_info_list: List[model.LogCurveInfoModel] = None,
+    log_curve_info_list: typing.List[model.LogCurveInfoModel] = None,
     dataframe: pandas.DataFrame = None,
     log_index: model.LogIndexModel = None,
     is_include_log_curve_info: bool = True,

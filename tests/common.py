@@ -1,5 +1,6 @@
 import io
 import os
+import typing
 from xml.etree import ElementTree
 
 import pandas
@@ -143,7 +144,7 @@ def __delete_and_clean_witsml(client: jeng.WitsmlClient):
 
 def __prepare_sample_dataset(
     filename: str,
-    log_curve_info_list,
+    log_curve_info_list: typing.List[model.LogCurveInfoModel],
 ):
     registered_mnemonic = [log_curve_info.mnemonic for log_curve_info in log_curve_info_list]
     return pandas.read_csv(
@@ -152,7 +153,11 @@ def __prepare_sample_dataset(
     )[registered_mnemonic]
 
 
-def __compare_curve_info(curve_info1, curve_info2, include_index_check=True):
+def __compare_curve_info(
+    curve_info1: model.LogCurveInfoModel,
+    curve_info2: model.LogCurveInfoModel,
+    include_index_check: bool = True,
+):
     if include_index_check:
         return (
             curve_info1.uid == curve_info2.uid

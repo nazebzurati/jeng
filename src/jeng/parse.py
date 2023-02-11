@@ -1,3 +1,5 @@
+import typing
+
 import pandas
 import xmltodict
 
@@ -35,7 +37,7 @@ def parse_log_into_dataframe(xml_out: str) -> pandas.DataFrame:
     return dataframe
 
 
-def parse_log_into_curve_info(xml_out: str) -> list[model.LogCurveInfoModel]:
+def parse_log_into_curve_info(xml_out: str) -> typing.List[model.LogCurveInfoModel]:
     """
     Parse 'log' XMLout reply into model.LogCurveInfoModel.
 
@@ -58,7 +60,7 @@ def parse_log_into_curve_info(xml_out: str) -> list[model.LogCurveInfoModel]:
         # for a single curve info, it parsed as an object and not list.
         # this line convert single object as list.
         parsed_log_curve_info_list = parsed_log_dict["logCurveInfo"]
-        if not isinstance(parsed_log_dict["logCurveInfo"], list):
+        if not isinstance(parsed_log_dict["logCurveInfo"], typing.List):
             parsed_log_curve_info_list = [parsed_log_dict["logCurveInfo"]]
 
         for parsed_log_curve_info in parsed_log_curve_info_list:
