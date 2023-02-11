@@ -2,7 +2,7 @@
 
 A simple WITSML client with utilities.
 
-[![PyPI version](https://badge.fury.io/py/jeng.svg)](https://badge.fury.io/py/jeng) [![Unit test](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml/badge.svg)](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml)
+[![PyPI version](https://badge.fury.io/py/jeng.svg?kill_cache=1)](https://badge.fury.io/py/jeng) [![Unit test](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml/badge.svg)](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml)
 
 ## Installation
 
