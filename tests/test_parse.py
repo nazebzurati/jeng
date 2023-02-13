@@ -70,6 +70,13 @@ def test_parse_reply_no_data():
 
 
 @pytest.mark.unit
+def test_parse_reply_single_data_row():
+    with open(f"{common.QUERY_PATH}/log_reply_data_single_row.xml", "r") as reply:
+        dataframe = parse.parse_log_into_dataframe(xml_out=reply.read())
+        assert dataframe.shape[0] == 1
+
+
+@pytest.mark.unit
 def test_parse_reply_insufficient_column():
     with open(f"{common.QUERY_PATH}/log_reply_insufficient_column.xml", "r") as reply:
         with pytest.raises(exception.JengReplyRowWithMismatchedColumnsException):

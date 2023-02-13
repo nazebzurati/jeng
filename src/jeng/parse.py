@@ -27,7 +27,12 @@ def parse_log_into_dataframe(xml_out: str) -> pandas.DataFrame:
         column_name_list = str(parsed_xml_dict["logs"]["log"]["logData"]["mnemonicList"]).split(",")
         dataframe = pandas.DataFrame(columns=column_name_list)
         try:
-            for data in parsed_xml_dict["logs"]["log"]["logData"]["data"]:
+            # fix data list becomes an object if only 1 data row present.
+            data_list = parsed_xml_dict["logs"]["log"]["logData"]["data"]
+            if not isinstance(data_list, typing.List):
+                data_list = [parsed_xml_dict["logs"]["log"]["logData"]["data"]]
+
+            for data in data_list:
                 dataframe.loc[len(dataframe.index)] = str(data).split(",")
         except ValueError:
             raise exception.JengReplyRowWithMismatchedColumnsException
