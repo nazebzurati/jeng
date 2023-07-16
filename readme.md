@@ -4,6 +4,8 @@ A simple WITSML client with utilities.
 
 [![PyPI version](https://badge.fury.io/py/jeng.svg?kill_cache=1)](https://badge.fury.io/py/jeng) [![Unit test](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml/badge.svg)](https://github.com/nazebzurati/jeng/actions/workflows/unit-test.yml)
 
+If you encounter any issues, please report them promptly [here](https://github.com/nazebzurati/jeng/issues). Additionally, feel free to request any necessary features [here](https://github.com/nazebzurati/jeng/issues).
+
 ## Installation
 
 ```
@@ -15,70 +17,72 @@ pip install jeng
 - Jeng should be compatible with Python 3.8 and higher.
 - Jeng should work with WITSML data schema v1.3.1.1 and v1.4.1.1.
 - Jeng should work the same for both TIME log type and DEPTH log type.
-    - Log curve info list is not technically required for TIME log type. For DEPTH log type, the index log curve info is required. Thus, log curve info is set to required for `generate.generate_log_query()` to ensure the API stays consistent and not confusing.
+  - Log curve info list is not technically required for TIME log type. For DEPTH log type, the index log curve info is required. Thus, log curve info is set to required for `generate.generate_log_query()` to ensure the API stays consistent and not confusing.
 - Incompatible package version update:
-    - `0.0.6` to `0.0.7`: Change from `jeng.client.WitsmlClient` package to `jeng.jeng.WitsmlClient`
+  - `0.0.6` to `0.0.7`: Change from `jeng.client.WitsmlClient` package to `jeng.jeng.WitsmlClient`
 
 ### Client
 
 1. To create and connect to WITSML Server:
-    ```python
-    from jeng import jeng
 
-    client = jeng.WitsmlClient()
+   ```python
+   from jeng import jeng
 
-    # return True if success, else False
-    status = client.connect(
-        url=CONNECTION_URL,
-        username=CONNECTION_USERNAME,
-        password=CONNECTION_PASSWORD,
-    )
-    ```
+   client = jeng.WitsmlClient()
+
+   # return True if success, else False
+   status = client.connect(
+       url=CONNECTION_URL,
+       username=CONNECTION_USERNAME,
+       password=CONNECTION_PASSWORD,
+   )
+   ```
 
 2. To call wrapper API (make sure to connect to WTISML Server first):
-    ```python
-    # send query to WMLS_AddToStore API
-    with open(f"{QUERY_PATH}/query.xml", "r") as query:
-        reply = client.add_to_store(
-            wml_type_in="well",
-            xml_in=query.read(),
-        )
 
-    # send query to WMLS_UpdateInStore API
-    with open(f"{QUERY_PATH}/query.xml", "r") as query:
-        reply = client.update_in_store(
-            wml_type_in="well",
-            xml_in=query.read(),
-        )
+   ```python
+   # send query to WMLS_AddToStore API
+   with open(f"{QUERY_PATH}/query.xml", "r") as query:
+       reply = client.add_to_store(
+           wml_type_in="well",
+           xml_in=query.read(),
+       )
 
-    # send query to WMLS_GetFromStore API
-    with open(f"{QUERY_PATH}/query.xml", "r") as query:
-        reply = client.get_from_store(
-            wml_type_in="well",
-            xml_in=query.read(),
-            return_element="all",
-        )
+   # send query to WMLS_UpdateInStore API
+   with open(f"{QUERY_PATH}/query.xml", "r") as query:
+       reply = client.update_in_store(
+           wml_type_in="well",
+           xml_in=query.read(),
+       )
 
-    # send query to WMLS_DeleteFromStore API
-    with open(f"{QUERY_PATH}/query.xml", "r") as query:
-        reply = client.delete_from_store(
-            wml_type_in="well",
-            xml_in=query.read(),
-        )
+   # send query to WMLS_GetFromStore API
+   with open(f"{QUERY_PATH}/query.xml", "r") as query:
+       reply = client.get_from_store(
+           wml_type_in="well",
+           xml_in=query.read(),
+           return_element="all",
+       )
 
-    # string is expected for xml_in and you can
-    # pass string query to all the wrapper API
-    client.add_to_store(
-        wml_type_in="well",
-        xml_in=query_xml_str,
-    )
-    ```
+   # send query to WMLS_DeleteFromStore API
+   with open(f"{QUERY_PATH}/query.xml", "r") as query:
+       reply = client.delete_from_store(
+           wml_type_in="well",
+           xml_in=query.read(),
+       )
+
+   # string is expected for xml_in and you can
+   # pass string query to all the wrapper API
+   client.add_to_store(
+       wml_type_in="well",
+       xml_in=query_xml_str,
+   )
+   ```
 
 3. To call other WITSML APIs than provided wrapper APIs (make sure to connect to WTISML Server first):
-    ```python
-    # send WMLS_GetVersion directly from Jeng client service
-    reply = client.service().WMLS_GetVersion()
-    ```
+   ```python
+   # send WMLS_GetVersion directly from Jeng client service
+   reply = client.service().WMLS_GetVersion()
+   ```
 
 ### Log Query Generator
 
@@ -197,30 +201,35 @@ log_curve_info_list = parse.parse_log_into_curve_info(
 Make sure to have a WITSML server running for the test.
 
 1. Clone the project:
-    ```bash
-    git clone https://github.com/nazebzurati/jeng.git
-    ```
+
+   ```bash
+   git clone https://github.com/nazebzurati/jeng.git
+   ```
 
 2. Prepare environment:
-    ```bash
-    # create environment and activate
-    virtualenv env
-    .\env\Scripts\activate
 
-    # install development dependencies
-    pip install -e .[dev]
-    ```
+   ```bash
+   # create environment and activate
+   virtualenv env
+   .\env\Scripts\activate       # on Windows
+   source .\env\bin\activate    # on Mac and Linux
+
+   # install development dependencies
+   pip install -e .[dev]        # bash
+   pip install -e .\[dev\]      # zsh
+   ```
 
 3. Change the source code and test.
-    ```bash
-    # formatting
-    isort . --skip env && black --line-length 120 .
 
-    # run coverage and pytest
-    coverage run -m pytest -v
-    coverage run -m pytest -m integration -v    # test with WITSML server integration
-    coverage run -m pytest -m unit -v           # test without WITSML server integration
+   ```bash
+   # formatting
+   isort . --skip env && black --line-length 120 .
 
-    # run static code test
-    coverage xml && sonar-scanner.bat -D"sonar.projectKey=<project-key>" -D"sonar.sources=." -D"sonar.host.url=<host-url>" -D"sonar.login=<project-token>"
-    ```
+   # run coverage and pytest
+   coverage run -m pytest -v
+   coverage run -m pytest -m integration -v    # test with WITSML server integration
+   coverage run -m pytest -m unit -v           # test without WITSML server integration
+
+   # run static code test
+   coverage xml && sonar-scanner.bat -D"sonar.projectKey=<project-key>" -D"sonar.sources=." -D"sonar.host.url=<host-url>" -D"sonar.login=<project-token>"
+   ```
