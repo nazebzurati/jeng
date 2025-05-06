@@ -5,7 +5,7 @@ with open("readme.md", "r") as doc:
 
 setup(
     name="jeng",
-    version="1.0.0",
+    version="1.0.1",
     license="MIT",
     description="A simple WITSML client with utilities.",
     long_description=long_description,
@@ -31,20 +31,20 @@ setup(
         "pandas",
     ],
     install_requires=[
-        "zeep>=4.2.1",
-        "xmltodict>=0.13.0",
-        "pandas>=2.0.3",
+        "zeep>=4.3.1",
+        "xmltodict>=0.14.0",
+        "pandas>=2.2.3",
     ],
     extras_require={
         "dev": [
-            "pytest>=7.4.0",
-            "pytest-dependency>=0.5.1",
-            "pytest-env>=0.8.2",
-            "black>=23.7.0",
-            "isort>=5.12.0",
-            "check-manifest>=0.49",
-            "twine>=4.0.2",
-            "coverage>=7.2.7",
+            "pytest>=8.3.5",
+            "pytest-dependency>=0.6.0",
+            "pytest-env>=1.1.5",
+            "black>=25.1.0",
+            "isort>=6.0.1",
+            "check-manifest>=0.50",
+            "twine>=6.1.0",
+            "coverage>=7.8.0",
         ],
     },
 )

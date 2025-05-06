@@ -14,12 +14,13 @@ pip install jeng
 
 ## Getting started
 
-- Jeng should be compatible with Python 3.8 and higher.
+- Jeng should be compatible with Python 3.9 and higher.
 - Jeng should work with WITSML data schema v1.3.1.1 and v1.4.1.1.
 - Jeng should work the same for both TIME log type and DEPTH log type.
   - Log curve info list is not technically required for TIME log type. For DEPTH log type, the index log curve info is required. Thus, log curve info is set to required for `generate.generate_log_query()` to ensure the API stays consistent and not confusing.
 - Incompatible package version update:
   - `0.0.6` to `0.0.7`: Change from `jeng.client.WitsmlClient` package to `jeng.jeng.WitsmlClient`
+  - `1.0.0` to `1.0.1`: Python 3.8 support was dropped due to EOL and to align with pandas.
 
 ### Client
 
@@ -215,7 +216,7 @@ Make sure to have a WITSML server running for the test.
    source .\env\bin\activate    # on Mac and Linux
 
    # install development dependencies
-   pip install -e .[dev]        # bash
+   pip install -e .[dev]        # powershell and bash
    pip install -e .\[dev\]      # zsh
    ```
 

@@ -199,7 +199,10 @@ def test_generate_log_data_with_time_index():
         filename=common.TIME_BASED_SAMPLE_FILENAME,
         log_curve_info_list=common.LOG_CURVE_INFO_TIME_LIST,
     )
-    dataframe["TIME"] = pandas.to_datetime(dataframe["TIME"], format=common.SAMPLE_TIME_FORMAT)
+    dataframe["TIME"] = pandas.to_datetime(
+        dataframe["TIME"],
+        format=common.SAMPLE_TIME_FORMAT,
+    ).dt.tz_localize("Asia/Kuala_Lumpur")
 
     # add data
     client: jeng.WitsmlClient = common.__connect_and_prepare()
